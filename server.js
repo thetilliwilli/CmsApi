@@ -10,7 +10,7 @@ const expressInit = require("./Init/expressInit.js");
 //LOGIC--------------------------------------------------------------------------------------------
 Promise.resolve({connectionString: config.db.connectionString})
     .then(mongooseInit)
-    .then(cx=>Promise.resolve({
+    .then(cx=>({
         port: config.port,
         mainRouter: mainRouter,
     }))
