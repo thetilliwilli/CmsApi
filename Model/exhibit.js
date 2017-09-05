@@ -10,20 +10,16 @@ function DateTimeNowIso(){
 var exhibitSchema = new mongoose.Schema({
     id: Number,
     guid: String,
+    name: String,
     title: String,
     subtitle: String,
-    cardTitle: String,
-    cardImageUri: String,
-    ttx: [{name: String, value: String, unit: String}],
-    articles: [{title: String, text: String}],
-    ctFrom: {type: Date, default: DateTimeNowIso},
-    ctTo: {type: Date, default: DateTimeNowIso},
-    cl: String,
-    // imageGallery: [{orderIndex: Number, uri: String, thumb: String, guid: String}],
-    // imageGalleryDescription: [{guid: String, text: String}]
-    imageGallery: [String],
-    imageGalleryDescription: [String],
-    lang: {type: String, enum: ["en", "ru"], default: "ru"}
+    coverImage: String,
+    fields: [{name: String, value: String}],
+    history: String,
+    description: String,
+    date: {type: Date, default: DateTimeNowIso},
+    location: String,
+    imageGallery: [{image: String, thumbnail: String, description:{ru: String, en: String}}],
 });
 
 module.exports = mongoose.model("Exhibit", exhibitSchema);
