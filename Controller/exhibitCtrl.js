@@ -6,6 +6,7 @@ class ExhibitCtrl
 
     }
 
+    //REST METHODS-----------------------------
     All(pReq, pRes){
         exhibitModel.find({}).select("title ctFrom ctTo cl lang").then((result)=>{pRes.json(result)});
     }
@@ -20,8 +21,8 @@ class ExhibitCtrl
     New(pReq, pRes){
         var dto = pReq.body;
         exhibitModel.create(dto, (err)=>{
-            if(err) pRes.send(err);
-            else pRes.send("ok");
+            if(err) pRes.status(500).send({message:"error desc"});
+            else pRes.status(200).send("ok");
         });
     }
 
@@ -37,6 +38,17 @@ class ExhibitCtrl
             if(err) pRes.send(err);
             else pRes.send("ok");
         });
+    }
+
+    //UTIL METHODS--------------------------------------------
+    ValidateNewExhibitData(exhibitData){
+        if(!exhibitData || !exhibitData.name.ru || exhibitData.name.ru.trim() === "")
+            return this.NewValidationError("Отсутствует название экспоната");
+    }
+    
+    //ERROR CREATORS---------------------------------------------
+    NewValidationError(message){
+        return {message, type:"ValidationError"};
     }
 }
 
