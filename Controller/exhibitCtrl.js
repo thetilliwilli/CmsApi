@@ -21,8 +21,8 @@ class ExhibitCtrl
     New(pReq, pRes){
         var dto = pReq.body;
         exhibitModel.create(dto, (err)=>{
-            if(err) pRes.status(500).send({message:"error desc"});
-            else pRes.status(200).send("ok");
+            if(err) pRes.status(500).send(err);
+            else pRes.status(200).send({message:"ok"});
         });
     }
 
