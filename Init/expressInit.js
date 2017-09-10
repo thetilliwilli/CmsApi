@@ -6,8 +6,8 @@ module.exports = function ExpressInit(pConfig){
     return new Promise((resolve, reject)=>{
         var app = express();
         
-        app.use(bodyParser.urlencoded({extended: true}));
-        app.use(bodyParser.json({limit:25*1000*1000}));
+        // app.use(bodyParser.urlencoded({extended: true}));
+        app.use(bodyParser.json({limit:50*1000*1000}));
         //CORS заголовок - принимать запросы с любых доменов
         app.use((req, res, next)=>{
             res.header("Access-Control-Allow-Origin", "*");

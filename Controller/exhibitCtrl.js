@@ -20,9 +20,8 @@ class ExhibitCtrl
 
     New(pReq, pRes){
         var dto = pReq.body;
-        exhibitModel.create(dto, (err)=>{
-            if(err) pRes.status(500).send(err);
-            else pRes.status(200).send({message:"ok"});
+        exhibitModel.create(dto, error=>{
+            pRes.status(200).send(error?{error}:{message:"ok"});
         });
     }
 
