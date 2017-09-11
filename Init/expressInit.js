@@ -1,8 +1,10 @@
 "use strict";
 const express = require("express");
 const bodyParser = require("body-parser");
+const config = require("../serverConfig.js");
+const mainRouter = require("../Router/mainRouter.js");
 
-module.exports = function ExpressInit(pConfig){
+module.exports = function ExpressInit(){
     return new Promise((resolve, reject)=>{
         var app = express();
         
@@ -14,8 +16,9 @@ module.exports = function ExpressInit(pConfig){
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
-        app.use(pConfig.mainRouter);
+        app.use("/Static", express.static(config.photoRepo.rootPath));
+        app.use(mainRouter);
         
-        app.listen(pConfig.port, ()=>{console.log(`[ContentManagerServer]:(StartListenPort):${pConfig.port}`);});
+        app.listen(config.port, ()=>{console.log(`[ContentManagerServer]:(StartListenPort):${config.port}`);});
     });
 };
