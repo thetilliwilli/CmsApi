@@ -20,8 +20,18 @@ class ExhibitCtrl
 
     New(pReq, pRes){
         var dto = pReq.body;
-        exhibitModel.create(dto, error=>{
-            pRes.status(200).send(error?{error}:{message:"ok"});
+        var newDoc = new exhibitModel(dto);
+
+        //Validation here
+        var error = newDoc.validateSync();
+        if(error)
+            return pRes.status(200).send({error});
+        
+        //All is good - now saving the things
+        newDoc.save(error =>{
+            if(error)
+                return pRes.status(200).send({error});
+            return pRes.status(200).send({message:"ok"});
         });
     }
 

@@ -1,6 +1,7 @@
 "use strict";
 //INCLUDES--------------------------------------------------------------------------------------------
 const mongoose = require("mongoose");
+const photoRepo = require("../Modules/photoRepository.js");
 
 //SETUP--------------------------------------------------------------------------------------------
 function DateTimeNowIso(){
@@ -20,6 +21,15 @@ var exhibitSchema = new mongoose.Schema({
     coverImage: {type: String, required: [true, "Отсутствует аватарка экспоната"]},
     fields: [{name: String, value: String}],
     imageGallery: [{image: String, thumbnail: String, description:{ru: String, en: String}}],
+});
+
+exhibitSchema.pre("save", function(next){
+    console.log(`Converting images to files for ${this.name.ru}`);
+    const coverImageData = this.coverImage.split(",")[1];
+    photoRepo.PutImage(coverImageData, this._id.toString(), "cover.jpeg");
+    // this.imageGallery.forEach(img=>{
+    // });
+    next();
 });
 
 module.exports = mongoose.model("Exhibit", exhibitSchema);
