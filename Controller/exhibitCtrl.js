@@ -2,14 +2,10 @@ const exhibitModel = require("../Model/exhibit.js");
 
 class ExhibitCtrl
 {
-    constructor(){
-
-    }
-
     //REST METHODS-----------------------------
     All(pReq, pRes){
         exhibitModel.find({}).select("id name").lean().exec().then((result)=>{
-            pRes.json(result)
+            pRes.status(200).json(result)
         });
     }
 
@@ -29,9 +25,8 @@ class ExhibitCtrl
     }
 
     Delete(pReq, pRes){
-        exhibitModel.findByIdAndRemove(pReq.params.id, (err)=>{
-            if(err) pRes.send(err);
-            else pRes.send("ok");
+        exhibitModel.findByIdAndRemove(pReq.params.id, (error)=>{
+            pRes.status(200).send(error?{error}:{message:"ok"});
         });
     }
 
