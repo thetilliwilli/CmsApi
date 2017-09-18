@@ -8,7 +8,9 @@ class ExhibitCtrl
 
     //REST METHODS-----------------------------
     All(pReq, pRes){
-        exhibitModel.find({}).select("title ctFrom ctTo cl lang").then((result)=>{pRes.json(result)});
+        exhibitModel.find({}).select("id name").lean().exec().then((result)=>{
+            pRes.json(result)
+        });
     }
 
     One(pReq, pRes){
@@ -21,6 +23,7 @@ class ExhibitCtrl
     New(pReq, pRes){
         var dto = pReq.body;
         exhibitModel.create(dto, error=>{
+            error = error instanceof Error ? error.message : error;
             pRes.status(200).send(error?{error}:{message:"ok"});
         });
     }

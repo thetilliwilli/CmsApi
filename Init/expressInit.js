@@ -1,10 +1,10 @@
 "use strict";
-const express = require("express");
-const bodyParser = require("body-parser");
-const config = require("../serverConfig.js");
-const mainRouter = require("../Router/mainRouter.js");
 
 module.exports = function ExpressInit(){
+    const express = require("express");
+    const bodyParser = require("body-parser");
+    const config = require("../serverConfig.js");
+    const mainRouter = require("../Router/mainRouter.js");
     return new Promise((resolve, reject)=>{
         var app = express();
         

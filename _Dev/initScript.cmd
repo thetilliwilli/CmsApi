@@ -1,1 +1,2 @@
-npm i --save sharp
+npm i --save uuid
+npm i --save mongoose-auto-increment
