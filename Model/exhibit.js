@@ -19,9 +19,16 @@ var exhibitSchema = new mongoose.Schema({
     description: {ru: String, en: String},
     history: {ru: String, en: String},
     date: {type: Date, default: DateTimeNowIso},
-    coverImage: {ru: String, en: String}, //{type: String, required: [true, "Отсутствует аватарка экспоната"]},
-    fields: [{name: String, value: String}],
-    imageGallery: [{image: String, thumbnail: String, description:{ru: String, en: String}}],
+    coverImage: {type: String, default: "/Static/img/defaultExhibitAvatar.jpg"}, //{ru: String, en: String}, //{type: String, required: [true, "Отсутствует аватарка экспоната"]},
+    fields: [{
+        name: {ru: String, en: String},
+        value: {ru: String, en: String}
+    }],
+    imageGallery: [{
+        image: String, thumbnail: String,
+        description:{ru: String, en: String},
+        guid: {type: String, default: uuid}
+    }],
 });
 
 exhibitSchema.plugin(autoIncrement.plugin, 'Exhibit');

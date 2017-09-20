@@ -21,6 +21,9 @@ class ExhibitCtrl
         exhibitModel.create(dto, error=>{
             error = error instanceof Error ? error.message : error;
             pRes.status(200).send(error?{error}:{message:"ok"});
+        }).catch(error=>{
+            error = error instanceof Error ? error.message : error;
+            pRes.status(200).send(error?{error}:{message:"ok"});
         });
     }
 
