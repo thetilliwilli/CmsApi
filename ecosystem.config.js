@@ -18,7 +18,7 @@ module.exports = {
       ref: 'origin/master',
       repo: 'https://github.com/thetilliwilli/CmsApi.git',
       path: '/opt/CmsApi',
-      "post-deploy" : "pm2 startOrRestart ecosystem.json --env production"
+      "post-deploy" : "pm2 startOrRestart ecosystem.config.js --env production"
     }
   }
 };
