@@ -12,7 +12,7 @@ module.exports = {
 
   deploy: {
     production: {
-      key: `C:/Users/Tilli/Downloads/id_rsa`,
+      key: `Private/id_rsa`,
       user: 'root',
       host: '95.213.248.123',
       ref: 'origin/master',
