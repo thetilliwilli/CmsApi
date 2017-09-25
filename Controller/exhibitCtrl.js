@@ -34,10 +34,12 @@ class ExhibitCtrl
     }
 
     Update(pReq, pRes){
-        exhibitModel.findByIdAndUpdate(pReq.params.id, pReq.body, (err)=>{
-            if(err) pRes.send(err);
-            else pRes.send("ok");
-        });
+        exhibitModel.findByIdAndUpdate(pReq.params.id, pReq.body).exec()
+            .then(() => pRes.status(200).send({message:"ok"}) )
+            .catch(error => {
+                error = error instanceof Error ? error.message : error;
+                pRes.status(200).send({error});
+            });
     }
 
     //UTIL METHODS--------------------------------------------
