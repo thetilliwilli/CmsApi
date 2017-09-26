@@ -30,7 +30,7 @@ class ExhibitCtrl
     Delete(pReq, pRes){
         exhibitModel.findByIdAndRemove(pReq.params.id, (error)=>{
             pRes.status(200).send(error?{error}:{message:"ok"});
-        });
+        });;
     }
 
     Update(pReq, pRes){
