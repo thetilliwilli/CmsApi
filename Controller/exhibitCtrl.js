@@ -1,7 +1,16 @@
 const exhibitModel = require("../Model/exhibit.js");
+const fs = require("fs");
+const path = require("path");
 
 class ExhibitCtrl
 {
+    constructor(){
+        this.New = this.New.bind(this);
+        this.Delete = this.Delete.bind(this);
+        this.Update = this.Update.bind(this);
+        this.LastUpdate = this.LastUpdate.bind(this);
+    }
+
     //REST METHODS-----------------------------
     All(pReq, pRes){
         exhibitModel.find({}).select("id name").lean().exec().then((result)=>{
@@ -18,24 +27,36 @@ class ExhibitCtrl
 
     New(pReq, pRes){
         var dto = pReq.body;
-        exhibitModel.create(dto, error=>{
-            error = error instanceof Error ? error.message : error;
-            pRes.status(200).send(error?{error}:{message:"ok"});
-        }).catch(error=>{
-            error = error instanceof Error ? error.message : error;
-            pRes.status(200).send(error?{error}:{message:"ok"});
-        });
+        let self = this;
+        exhibitModel.create(dto)
+            .then(() => {
+                pRes.status(200).send({message:"ok"}) 
+            })
+            .then(() => {
+                self.LastUpdate()
+            })
+            .catch(error=>{
+                error = error instanceof Error ? error.message : error;
+                pRes.status(200).send({error});
+            });
     }
 
     Delete(pReq, pRes){
-        exhibitModel.findByIdAndRemove(pReq.params.id, (error)=>{
-            pRes.status(200).send(error?{error}:{message:"ok"});
-        });
+        let self = this;
+        exhibitModel.findByIdAndRemove(pReq.params.id).exec()
+            .then(() => pRes.status(200).send({message:"ok"}) )
+            .then(()=>self.LastUpdate())
+            .catch(error=>{
+                error = error instanceof Error ? error.message : error;
+                pRes.status(200).send({error});
+            });
     }
 
     Update(pReq, pRes){
+        let self = this;
         exhibitModel.findByIdAndUpdate(pReq.params.id, pReq.body).exec()
             .then(() => pRes.status(200).send({message:"ok"}) )
+            .then(()=>self.LastUpdate())
             .catch(error => {
                 error = error instanceof Error ? error.message : error;
                 pRes.status(200).send({error});
@@ -51,6 +72,11 @@ class ExhibitCtrl
     //ERROR CREATORS---------------------------------------------
     NewValidationError(message){
         return {message, type:"ValidationError"};
+    }
+
+    LastUpdate(){
+        var output=(new Date()).toISOString().split(".")[0].split("-").join("").split(":").join("")+"Z";
+        fs.writeFile(path.join(__dirname, "../lastUpdate.txt"), output);
     }
 }
 
