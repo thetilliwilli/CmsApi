@@ -76,7 +76,7 @@ class ExhibitCtrl
 
     LastUpdate(){
         var output=(new Date()).toISOString().split(".")[0].split("-").join("").split(":").join("")+"Z";
-        fs.writeFile(path.join(__dirname, "../lastUpdate.txt"), output);
+        fs.writeFile(path.join(__dirname, "../Scripts/lastUpdate.txt"), output);
     }
 }
 
