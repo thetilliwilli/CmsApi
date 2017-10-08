@@ -2,15 +2,14 @@
 //INCLUDES--------------------------------------------------------------------------------------------
 const mongoose = require("mongoose");
 const uuid = require("uuid/v4");
-const autoIncrement = require('mongoose-auto-increment');
+const autoIncrementPlugin = require('mongoose-auto-increment');
+const util = require("../Module/util.js");
 
 //SETUP--------------------------------------------------------------------------------------------
-function DateTimeNowIso(){
-    return (new Date()).toISOString();
-}
+
 //LOGIC--------------------------------------------------------------------------------------------
 var exhibitSchema = new mongoose.Schema({
-    _ct: {type: Date, default: DateTimeNowIso},
+    _ct: {type: Date, default: util.Now},
     // id: String,
     guid: {type:String, default: uuid},
     name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"], unique: [true, "Название экспоната должно быть уникальным"]}, en: String},
@@ -19,19 +18,20 @@ var exhibitSchema = new mongoose.Schema({
     location: {ru: String, en: String},
     description: {ru: String, en: String},
     history: {ru: String, en: String},
-    date: {type: Date, default: DateTimeNowIso},
+    date: {type: Date, default: util.Now},
     coverImage: {type: String, default: "/Static/img/defaultExhibitAvatar.jpg"}, //{ru: String, en: String}, //{type: String, required: [true, "Отсутствует аватарка экспоната"]},
     fields: [{
         name: {ru: String, en: String},
         value: {ru: String, en: String}
     }],
     imageGallery: [{
-        image: String, thumbnail: String,
+        image: String,
+        thumbnail: String,
         description:{ru: String, en: String},
         guid: {type: String, default: uuid}
     }],
 });
 
-exhibitSchema.plugin(autoIncrement.plugin, 'Exhibit');
+exhibitSchema.plugin(autoIncrementPlugin.plugin, 'Exhibit');
 
 module.exports = mongoose.model("Exhibit", exhibitSchema);
