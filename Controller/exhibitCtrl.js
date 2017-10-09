@@ -1,6 +1,7 @@
 const exhibitModel = require("../Model/exhibit.js");
 const fs = require("fs");
 const path = require("path");
+const util = require("../Module/util.js");
 
 class ExhibitCtrl
 {
@@ -27,6 +28,7 @@ class ExhibitCtrl
 
     New(pReq, pRes){
         var dto = pReq.body;
+        dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
         exhibitModel.create(dto)
             .then(() => {
@@ -53,8 +55,10 @@ class ExhibitCtrl
     }
 
     Update(pReq, pRes){
+        var dto = pReq.body;
+        dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        exhibitModel.findByIdAndUpdate(pReq.params.id, pReq.body).exec()
+        exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec()
             .then(() => pRes.status(200).send({message:"ok"}) )
             .then(()=>self.LastUpdate())
             .catch(error => {

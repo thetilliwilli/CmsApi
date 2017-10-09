@@ -10,6 +10,7 @@ const util = require("../Module/util.js");
 //LOGIC--------------------------------------------------------------------------------------------
 var exhibitSchema = new mongoose.Schema({
     _ct: {type: Date, default: util.Now},
+    _mt: {type: Date, default: util.Now},
     // id: String,
     guid: {type:String, default: uuid},
     name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"], unique: [true, "Название экспоната должно быть уникальным"]}, en: String},
