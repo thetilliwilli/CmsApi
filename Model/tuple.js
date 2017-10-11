@@ -27,4 +27,4 @@ var tupleSchema = new mongoose.Schema({
 
 tupleSchema.plugin(autoIncrementPlugin.plugin, "Tuple");
 
-module.exports = mongoose.Model("Tuple", tupleSchema);
+module.exports = mongoose.model("Tuple", tupleSchema);
