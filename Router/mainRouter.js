@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const exhibitRouter = require("./exhibitRouter.js");
+const exhibitRouter = require("./exhibit.js");
 
 
 router.get("/", (req, res)=>{

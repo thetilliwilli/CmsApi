@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const exhibitCtrl = require("../Controller/exhibitCtrl.js");
+const exhibitCtrl = require("../Controller/exhibit.js");
 
 router.route("/:id")
     .get(exhibitCtrl.One)
