@@ -1,9 +1,9 @@
-const exhibitModel = require("../Model/exhibit.js");
+const goloModel = require("../Model/golo.js");
 const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
 
-class ExhibitCtrl
+class GoloCtrl
 {
     constructor(){
         this.New = this.New.bind(this);
@@ -14,13 +14,13 @@ class ExhibitCtrl
 
     //REST METHODS-----------------------------
     All(pReq, pRes){
-        exhibitModel.find({}).select("id name").lean().exec().then((result)=>{
+        goloModel.find({}).select("id name").lean().exec().then((result)=>{
             pRes.status(200).json(result)
         });
     }
 
     One(pReq, pRes){
-        exhibitModel.findById(pReq.params.id, (err, result)=>{
+        goloModel.findById(pReq.params.id, (err, result)=>{
             if(err) pRes.send(err);
             else pRes.json(result);
         });
@@ -30,7 +30,7 @@ class ExhibitCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        exhibitModel.create(dto)
+        goloModel.create(dto)
             .then(() => {
                 pRes.status(200).send({message:"ok"}) 
             })
@@ -45,7 +45,7 @@ class ExhibitCtrl
 
     Delete(pReq, pRes){
         let self = this;
-        exhibitModel.findByIdAndRemove(pReq.params.id).exec()
+        goloModel.findByIdAndRemove(pReq.params.id).exec()
             .then(() => pRes.status(200).send({message:"ok"}) )
             .then(()=>self.LastUpdate())
             .catch(error=>{
@@ -58,7 +58,7 @@ class ExhibitCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec()
+        goloModel.findByIdAndUpdate(pReq.params.id, dto).exec()
             .then(() => pRes.status(200).send({message:"ok"}) )
             .then(()=>self.LastUpdate())
             .catch(error => {
@@ -68,8 +68,8 @@ class ExhibitCtrl
     }
 
     //UTIL METHODS--------------------------------------------
-    ValidateNewExhibitData(exhibitData){
-        if(!exhibitData || !exhibitData.name.ru || exhibitData.name.ru.trim() === "")
+    ValidateNewGoloData(goloData){
+        if(!goloData || !goloData.name.ru || goloData.name.ru.trim() === "")
             return this.NewValidationError("Отсутствует название экспоната");
     }
     
@@ -84,4 +84,4 @@ class ExhibitCtrl
     }
 }
 
-module.exports = new ExhibitCtrl();
+module.exports = new GoloCtrl();
