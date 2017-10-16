@@ -67,7 +67,7 @@ RESPONSE:
             }
         }
     ],
-    video: "Static/video/video1.mp4"
+    video: "/Static/vid/default.mp4"
 }
     
 //3.    Subject: all
