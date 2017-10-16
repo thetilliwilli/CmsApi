@@ -17,7 +17,7 @@ module.exports = function ExpressInit(){
             res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             next();
         });
-        app.use("/Static", express.static(config.photoRepo.rootPath));
+        app.use("/Static", express.static(config.repositoryPath));
         app.use(mainRouter);
         
         app.listen(config.port, ()=>{console.log(`[ContentManagerServer]:(StartListenPort):${config.port}`);});

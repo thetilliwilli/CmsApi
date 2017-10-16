@@ -18,7 +18,7 @@ var goloSchema = new mongoose.Schema({
     subtitle: {ru: String, en: String},
     location: {ru: String, en: String},
     description: {ru: String, en: String},
-    history: {ru: String, en: String},
+    // history: {ru: String, en: String},
     date: {type: Date, default: util.Now},
     coverImage: {type: String, default: "/Static/img/defaultGoloAvatar.jpg"}, //{ru: String, en: String}, //{type: String, required: [true, "Отсутствует аватарка экспоната"]},
     fields: [{

@@ -12,5 +12,6 @@ module.exports = {
     },
     photoRepo:{
         rootPath: path.join(__dirname, "Static/CDN")
-    }
+    },
+    repositoryPath: path.join(__dirname, "Static")
 };
