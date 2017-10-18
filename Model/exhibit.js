@@ -27,11 +27,27 @@ var exhibitSchema = new mongoose.Schema({
     }],
     imageGallery: [{
         image: String,
-        thumbnail: String,
+        // thumbnail: String,
         description:{ru: String, en: String},
         guid: {type: String, default: uuid}
     }],
 });
+
+// exhibitSchema.post("save", doc => {
+//     console.log("post save");
+//     console.log(this);
+//     console.log(doc);
+// });
+// exhibitSchema.post("update", doc => {
+    //     console.log("post update");
+    //     console.log(this);
+    //     console.log(doc);
+    // });
+    // exhibitSchema.post("findOneAndUpdate", doc => {
+        //     console.log("post update");
+        //     console.log(this);
+        //     console.log(doc);
+// });
 
 exhibitSchema.plugin(autoIncrementPlugin.plugin, 'Exhibit');
 

@@ -2,6 +2,7 @@ const exhibitModel = require("../Model/exhibit.js");
 const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
+const repoAdapter = require("../Module/repoAdapter.js");
 
 class ExhibitCtrl
 {
