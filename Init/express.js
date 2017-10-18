@@ -3,7 +3,7 @@
 module.exports = function ExpressInit(){
     const express = require("express");
     const bodyParser = require("body-parser");
-    const config = require("../serverConfig.js");
+    const config = require("../config.js");
     const mainRouter = require("../Router/main.js");
     return new Promise((resolve, reject)=>{
         var app = express();

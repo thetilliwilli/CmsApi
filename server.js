@@ -1,6 +1,6 @@
 "use strict";
 //INCLUDES--------------------------------------------------------------------------------------------
-const config = require("./serverConfig.js");
+const config = require("./config.js");
 const express = require("express");
 const mongoose = require("mongoose");
 //SETUP--------------------------------------------------------------------------------------------
