@@ -5,9 +5,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 //SETUP--------------------------------------------------------------------------------------------
 const mongooseInit = require("./Init/mongoose.js");
+const repoInit = require("./Init/repoInit.js");
 const expressInit = require("./Init/express.js");
 //LOGIC--------------------------------------------------------------------------------------------
-Promise.resolve({connectionString: config.db.connectionString})
+Promise.resolve()
     .then(mongooseInit)
+    .then(repoInit)
     .then(expressInit)
+    .then((cxt)=>{
+        //Do what you want here
+    })
     .catch(err=>console.error(err));

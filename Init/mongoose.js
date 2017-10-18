@@ -1,11 +1,14 @@
 "use strict";
-module.exports = function MongooseInit(pConfig){
+
+const serverConfig = require("../config.js");
+
+module.exports = function MongooseInit(){
     const mongoose = require("mongoose");
     const autoIncrement = require('mongoose-auto-increment');
     return new Promise((resolve, reject)=>{
         //Настраиваем дефолтные промисы
         mongoose.Promise = global.Promise;
-        mongoose.connect(pConfig.connectionString, {useMongoClient:true});
+        mongoose.connect(serverConfig.db.connectionString, {useMongoClient:true});
 
         autoIncrement.initialize(mongoose.connection);//Чтобы работало авто-инкрементирующиеся поле
 

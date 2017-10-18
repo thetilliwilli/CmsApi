@@ -10,8 +10,7 @@ module.exports = {
         dbname: "TAG",
         get connectionString(){return `mongodb://${this.host}:${this.port}/${this.dbname}`},
     },
-    photoRepo:{
-        rootPath: path.join(__dirname, "Static/CDN")
-    },
-    repositoryPath: path.join(__dirname, "Static")
+    repo:{
+        root: path.join(__dirname, "Static/Repo")
+    }
 };

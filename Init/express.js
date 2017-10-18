@@ -17,9 +17,13 @@ module.exports = function ExpressInit(){
             res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             next();
         });
-        app.use("/Static", express.static(config.repositoryPath));
+        app.use("/Static/Repo", express.static(config.repo.root));
         app.use(mainRouter);
         
-        app.listen(config.port, ()=>{console.log(`[ContentManagerServer]:(StartListenPort):${config.port}`);});
+        app.listen(config.port, ()=>{
+            console.log(`[ContentManagerServer]:(StartListenPort):${config.port}`);
+            resolve();
+        });
+        
     });
 };
