@@ -18,12 +18,13 @@ class TupleParser
             {
                 case "meta": return {entities: responseJson.map(i => ({id: i._id, mt: i._mt}))};
                 case "entity":
-                    responseJson = responseJson[0];
-                    responseJson.id = responseJson._id;
-                    responseJson.mt = responseJson._mt;
-                    delete responseJson._id;
-                    delete responseJson._mt;
-                return responseJson;
+                    let res = responseJson[0];
+                    res.id = res._id;delete res._id;
+                    res.mt = res._mt;delete res._mt;
+                    delete res.guid;
+                    delete res.__v;
+                    res.imageGallery = res.imageGallery.map(img => ({image: img.image, description: img.description.ru}));
+                    return res;
                 case "all": return {entities: responseJson.map(i => {
                     i.id = i._id;
                     i.mt = i._mt;
