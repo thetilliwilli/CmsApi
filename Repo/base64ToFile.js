@@ -10,7 +10,7 @@ function Base64ToFile(img){
     if(commaPos === -1)
         throw new Error(`Invalid base64 image`);
     const ext = img.slice(0,commaPos).split("/")[1].split(";")[0];
-    const content = img.slice(0,commaPos+1);
+    const content = img.slice(commaPos+1);
     return {ext, content};
 };
 

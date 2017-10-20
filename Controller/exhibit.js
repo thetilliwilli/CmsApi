@@ -31,17 +31,12 @@ class ExhibitCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        exhibitModel.create(dto)
-            .then(() => {
-                pRes.status(200).send({message:"ok"}) 
-            })
-            .then(() => {
-                self.LastUpdate()
-            })
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+        this._NextIndex()
+            .then(index => repoAdapter.StoreGallery(index, dto.imageGallery))
+            .then(() => exhibitModel.create(dto))
+            .then(() => pRes.status(200).send({message:"ok"}))
+            .then(() => self.LastUpdate())
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Delete(pReq, pRes){
@@ -82,6 +77,16 @@ class ExhibitCtrl
     LastUpdate(){
         var output=(new Date()).toISOString().split(".")[0].split("-").join("").split(":").join("")+"Z";
         fs.writeFile(path.join(__dirname, "../Scripts/lastUpdate.txt"), output);
+    }
+
+    //PRIVATE
+    _NextIndex(){
+        return new Promise((rs,rj)=> exhibitModel.nextCount((error, count)=>error?rj(error):rs(count)) );
+    }
+
+    _Error(error){
+        error = error instanceof Error ? error.message : error;
+        return {error};
     }
 }
 

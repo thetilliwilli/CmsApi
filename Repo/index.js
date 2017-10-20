@@ -79,7 +79,7 @@ class MediaRepository
     SaveFile(gid, fid, fext, content){
         const abs = this.SafeAbs(gid, fid+"."+fext);
         return new Promise((rs,rj) => {
-            fs.writeFile(abs, content, err => err?rj(err):rs());
+            fs.writeFile(abs, content, "base64", err => err?rj(err):rs());
         });
     }
 
