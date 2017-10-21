@@ -9,10 +9,10 @@ const repoInit = require("./Init/repo.js");
 const expressInit = require("./Init/express.js");
 //LOGIC--------------------------------------------------------------------------------------------
 Promise.resolve()
-    .then(mongooseInit)
-    .then(repoInit)
-    .then(expressInit)
-    .then((cxt)=>{
+    .then(() => mongooseInit())
+    .then(() => repoInit())
+    .then(() => expressInit())
+    .then(cx => {
         //Do what you want here
         var repo = require("./Repo/index.js");
         // repo.CreateEmptyGallery("1234")
