@@ -31,36 +31,35 @@ class ExhibitCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        this._NextIndex()
+        Promise.resolve()
+            .then(() => this._NextIndex())
             .then(index => repoAdapter.StoreGallery(index, dto.imageGallery))
             .then(() => exhibitModel.create(dto))
-            .then(() => pRes.status(200).send({message:"ok"}))
             .then(() => self.LastUpdate())
+            .then(() => pRes.status(200).send({message:"ok"}))
             .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Delete(pReq, pRes){
         let self = this;
-        exhibitModel.findByIdAndRemove(pReq.params.id).exec()
+        Promise.resolve()
+            .then(() => repoAdapter.DeleteGallery(pReq.params.id))
+            .then(() => exhibitModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
-            .then(()=>self.LastUpdate())
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Update(pReq, pRes){
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec()
-            .then(() => pRes.status(200).send({message:"ok"}) )
+        Promise.resolve()
+            .then(() => repoAdapter.StoreGallery(pReq.params.id, dto.imageGallery))
+            .then(() => exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec())
             .then(()=>self.LastUpdate())
-            .catch(error => {
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .then(() => pRes.status(200).send({message:"ok"}) )
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     //UTIL METHODS--------------------------------------------

@@ -54,8 +54,12 @@ class MediaRepository
      */
     DeleteGallery(gid){
         const abs = this.SafeAbs(gid);
-        return new Promise((rs,rj) => {
-            fs.rmdir(abs, err => err?rj(err):rs());
+        return new Promise((RS,RJ) => {
+            fs.readdir(abs, (error, files) => {
+                if(error) return RJ(error);
+                files.forEach(f => fs.unlink(path.join(abs, f)));//Осторожно: только назначаю Job'ы на удаление файлов, но без всяких гарантий, т.е. в худшей ситуации файлы остануться на диске вместе с папкой
+                fs.rmdir(abs, err => err?RJ(err):RS());
+            });
         });
     }
 
