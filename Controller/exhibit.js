@@ -33,7 +33,7 @@ class ExhibitCtrl
         let self = this;
         Promise.resolve()
             .then(() => this._NextIndex())
-            .then(index => repoAdapter.StoreGallery(index, dto.imageGallery))
+            .then(index => repoAdapter.StoreGallery("Tag/"+index, dto))
             .then(() => exhibitModel.create(dto))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}))
@@ -43,7 +43,7 @@ class ExhibitCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery(pReq.params.id))
+            .then(() => repoAdapter.DeleteGallery("Tag/"+pReq.params.id))
             .then(() => exhibitModel.findByIdAndRemove(pReq.params.id).exec())
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
@@ -55,7 +55,7 @@ class ExhibitCtrl
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.StoreGallery(pReq.params.id, dto.imageGallery))
+            .then(() => repoAdapter.StoreGallery("Tag/"+pReq.params.id, dto))
             .then(() => exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec())
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )

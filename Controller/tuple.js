@@ -2,6 +2,7 @@ const tupleModel = require("../Model/tuple.js");
 const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
+const repoAdapter = require("../Module/repoAdapter.js");
 
 class TupleCtrl
 {
@@ -30,41 +31,35 @@ class TupleCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        tupleModel.create(dto)
-            .then(() => {
-                pRes.status(200).send({message:"ok"}) 
-            })
-            .then(() => {
-                self.LastUpdate()
-            })
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+        Promise.resolve()
+            .then(() => this._NextIndex())
+            .then(index => repoAdapter.StoreGallery("Tuple/"+index, dto))
+            .then(() => tupleModel.create(dto))
+            .then(() => self.LastUpdate())
+            .then(() => pRes.status(200).send({message:"ok"}))
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Delete(pReq, pRes){
         let self = this;
-        tupleModel.findByIdAndRemove(pReq.params.id).exec()
+        Promise.resolve()
+            .then(() => repoAdapter.DeleteGallery("Tuple/"+pReq.params.id))
+            .then(() => tupleModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
-            .then(()=>self.LastUpdate())
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Update(pReq, pRes){
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        tupleModel.findByIdAndUpdate(pReq.params.id, dto).exec()
-            .then(() => pRes.status(200).send({message:"ok"}) )
+        Promise.resolve()
+            .then(() => repoAdapter.StoreGallery("Tuple/"+pReq.params.id, dto))
+            .then(() => tupleModel.findByIdAndUpdate(pReq.params.id, dto).exec())
             .then(()=>self.LastUpdate())
-            .catch(error => {
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .then(() => pRes.status(200).send({message:"ok"}) )
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     //UTIL METHODS--------------------------------------------
@@ -81,6 +76,16 @@ class TupleCtrl
     LastUpdate(){
         var output=(new Date()).toISOString().split(".")[0].split("-").join("").split(":").join("")+"Z";
         fs.writeFile(path.join(__dirname, "../Scripts/lastUpdate.txt"), output);
+    }
+
+    //PRIVATE
+    _NextIndex(){
+        return new Promise((rs,rj)=> tupleModel.nextCount((error, count)=>error?rj(error):rs(count)) );
+    }
+
+    _Error(error){
+        error = error instanceof Error ? error.message : error;
+        return {error};
     }
 }
 
