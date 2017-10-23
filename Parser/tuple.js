@@ -114,7 +114,7 @@ class TupleParser
             delete ens.fields;
         ens.images = ens.imageGallery.map(img => REPO_HOSTNAME + img.image);
             delete ens.imageGallery;
-        ens.cover = ens.coverImage
+        ens.cover = REPO_HOSTNAME + ens.coverImage;
             delete ens.coverImage;
         return ens;
     }
