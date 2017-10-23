@@ -1,10 +1,14 @@
 
 class GoloParser
 {
+    constructor(){
+        this.SelectionFilter = this.SelectionFilter.bind(this);
+        this.TransformationFunction = this.TransformationFunction.bind(this);
+    }
     SelectionFilter(subject){
         switch(subject)
         {
-            case "meta": return "_mt";
+            case "meta": return "_mt title";
             case "entity": return null;
             case "all": return null;
             case "ping": return null;
@@ -13,28 +17,23 @@ class GoloParser
     }
 
     TransformationFunction(subject){
+        let self = this;
         return function(responseJson){
             switch(subject)
             {
-                case "meta": return {entities: responseJson.map(i => ({id: i._id, mt: i._mt}))};
-                case "entity":
-                    responseJson = responseJson[0];
-                    responseJson.id = responseJson._id;
-                    responseJson.mt = responseJson._mt;
-                    delete responseJson._id;
-                    delete responseJson._mt;
-                return responseJson;
-                case "all": return {entities: responseJson.map(i => {
-                    i.id = i._id;
-                    i.mt = i._mt;
-                    delete i._id;
-                    delete i._mt;
-                    return i;
-                })};
+                case "meta": return {entities: responseJson.map(i => self._Form(i))};
+                case "entity": return self._Form(responseJson[0]);
+                case "all": return {entities: responseJson.map(i => self._Form(i))};
                 case "ping": return responseJson;
                 default: throw new Error(`Invalid subject ${subject}`);
             }
         };
+    }
+
+    _Form(ens){
+        ens.id = ens._id;delete ens._id;
+        ens.mt = ens._mt;delete ens._mt;
+        return ens;
     }
 }
 const singleton = new GoloParser();

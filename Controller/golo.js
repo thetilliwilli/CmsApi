@@ -2,6 +2,7 @@ const goloModel = require("../Model/golo.js");
 const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
+const repoAdapter = require("../Module/repoAdapter.js");
 
 class GoloCtrl
 {
@@ -30,41 +31,35 @@ class GoloCtrl
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        goloModel.create(dto)
-            .then(() => {
-                pRes.status(200).send({message:"ok"}) 
-            })
-            .then(() => {
-                self.LastUpdate()
-            })
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+        Promise.resolve()
+            .then(() => this._NextIndex())
+            .then(index => repoAdapter.StoreGallery("Golo/"+index, dto))
+            .then(() => goloModel.create(dto))
+            .then(() => self.LastUpdate())
+            .then(() => pRes.status(200).send({message:"ok"}))
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Delete(pReq, pRes){
         let self = this;
-        goloModel.findByIdAndRemove(pReq.params.id).exec()
+        Promise.resolve()
+            .then(() => repoAdapter.DeleteGallery("Golo/"+pReq.params.id))
+            .then(() => goloModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
-            .then(()=>self.LastUpdate())
-            .catch(error=>{
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     Update(pReq, pRes){
         var dto = pReq.body;
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
-        goloModel.findByIdAndUpdate(pReq.params.id, dto).exec()
-            .then(() => pRes.status(200).send({message:"ok"}) )
+        Promise.resolve()
+            .then(() => repoAdapter.StoreGallery("Golo/"+pReq.params.id, dto))
+            .then(() => goloModel.findByIdAndUpdate(pReq.params.id, dto).exec())
             .then(()=>self.LastUpdate())
-            .catch(error => {
-                error = error instanceof Error ? error.message : error;
-                pRes.status(200).send({error});
-            });
+            .then(() => pRes.status(200).send({message:"ok"}) )
+            .catch(error => pRes.status(200).send(self._Error(error)));
     }
 
     //UTIL METHODS--------------------------------------------
@@ -81,6 +76,16 @@ class GoloCtrl
     LastUpdate(){
         var output=(new Date()).toISOString().split(".")[0].split("-").join("").split(":").join("")+"Z";
         fs.writeFile(path.join(__dirname, "../Scripts/lastUpdate.txt"), output);
+    }
+
+    //PRIVATE
+    _NextIndex(){
+        return new Promise((rs,rj)=> goloModel.nextCount((error, count)=>error?rj(error):rs(count)) );
+    }
+
+    _Error(error){
+        error = error instanceof Error ? error.message : error;
+        return {error};
     }
 }
 
