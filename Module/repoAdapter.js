@@ -23,7 +23,13 @@ module.exports = {
                     return repo.SaveFile(gid, fid, info.ext, info.content);
                 }
             )))
-            .then(() => gallery.forEach( (img,i) => img.image = `${config.repo.webRoot}/${galleryId}/${fids[i]}.${exts[i]}`))
+            .then(() => {//Пересохраняем coverImage
+                if(dto.coverImage.slice(0,5) !== "data:") return;//Выходим если не base64 изображение
+                const info = base64ToFile(dto.coverImage);
+                return repo.SaveFile(gid, "cover", info.ext, info.content)
+                    .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
+            })
+            .then(() => gallery.forEach( (img,i) => img.image = `${config.repo.webRoot}/${gid}/${fids[i]}.${exts[i]}`))
             .catch(error => {console.error(error); throw error;});
     },
     DeleteGallery: function(galleryId){

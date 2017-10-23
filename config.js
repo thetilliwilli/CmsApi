@@ -11,7 +11,7 @@ module.exports = {
         get connectionString(){return `mongodb://${this.host}:${this.port}/${this.dbname}`},
     },
     repo:{
-        host: "localhost",
+        host: "95.213.248.123",
         port: 8080,
         webRoot: "/Static/Repo",
         get root(){ return path.join(__dirname, this.webRoot) }
