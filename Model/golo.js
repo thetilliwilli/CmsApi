@@ -18,7 +18,7 @@ var goloSchema = new mongoose.Schema({
     location: {ru: String, en: String},
     description: {ru: String, en: String},
     date: {type: Date, default: util.Now},
-    coverImage: {type: String, default: "/Static/img/defaultGoloAvatar.jpg"},
+    // coverImage: {type: String, default: "/Static/img/defaultGoloAvatar.jpg"},
     fields: [{
         name: {ru: String, en: String},
         value: {ru: String, en: String}
@@ -29,7 +29,7 @@ var goloSchema = new mongoose.Schema({
         description:{ru: String, en: String},
         guid: {type: String, default: uuid}
     }],
-    video: {type: String, default: "/Static/vid/default.mp4"},
+    video: {type: String, default: "/Static/vid/defaultGoloVid.mp4"},
 });
 
 goloSchema.plugin(autoIncrementPlugin.plugin, 'Golo');

@@ -33,6 +33,8 @@ class GoloParser
     _Form(ens){
         ens.id = ens._id;delete ens._id;
         ens.mt = ens._mt;delete ens._mt;
+        delete ens.guid;
+        delete ens.__v;
         return ens;
     }
 }

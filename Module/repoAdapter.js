@@ -24,10 +24,16 @@ module.exports = {
                 }
             )))
             .then(() => {//Пересохраняем coverImage
-                if(dto.coverImage.slice(0,5) !== "data:") return;//Выходим если не base64 изображение
+                if(!dto.coverImage || dto.coverImage.slice(0,5) !== "data:") return;//Выходим если не base64 изображение
                 const info = base64ToFile(dto.coverImage);
                 return repo.SaveFile(gid, "cover", info.ext, info.content)
                     .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
+            })
+            .then(() => {//Пересохраняем video (Golo)
+                if(!dto.video || dto.video.slice(0,5) !== "data:") return;//Выходим если не base64
+                const info = base64ToFile(dto.video);
+                return repo.SaveFile(gid, "cover", info.ext, info.content)
+                    .then(() => dto.video = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
             })
             .then(() => gallery.forEach( (img,i) => img.image = `${config.repo.webRoot}/${gid}/${fids[i]}.${exts[i]}`))
             .catch(error => {console.error(error); throw error;});
