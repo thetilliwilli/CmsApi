@@ -29,6 +29,8 @@ var goloSchema = new mongoose.Schema({
         guid: {type: String, default: uuid}
     }],
     video: {type: String, default: "/Static/vid/defaultGoloVid.mp4"},
+    complex: {type: String, default: ""},
+    ordinal: {type: Number, default: 0},
 });
 
 goloSchema.plugin(autoIncrementPlugin.plugin, 'Golo');
