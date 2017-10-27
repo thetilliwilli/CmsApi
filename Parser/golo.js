@@ -35,6 +35,10 @@ class GoloParser
         ens.mt = ens._mt;delete ens._mt;
         delete ens.guid;
         delete ens.__v;
+        ens.mediaGallery = ens.imageGallery;
+            delete ens.imageGallery;
+            ens.mediaGallery.push({id:"video",video:ens.video});
+            delete ens.video;
         return ens;
     }
 }
