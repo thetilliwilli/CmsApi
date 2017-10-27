@@ -12,13 +12,12 @@ var goloSchema = new mongoose.Schema({
     _ct: {type: Date, default: util.Now},
     _mt: {type: Date, default: util.Now},
     guid: {type:String, default: uuid},
-    name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"], unique: [true, "Название экспоната должно быть уникальным"]}, en: String},
+    name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"]}, en: String},
     title: {ru: String, en: String},
     subtitle: {ru: String, en: String},
     location: {ru: String, en: String},
     description: {ru: String, en: String},
     date: {type: Date, default: util.Now},
-    // coverImage: {type: String, default: "/Static/img/defaultGoloAvatar.jpg"},
     fields: [{
         name: {ru: String, en: String},
         value: {ru: String, en: String}

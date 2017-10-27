@@ -12,7 +12,7 @@ var exhibitSchema = new mongoose.Schema({
     _ct: {type: Date, default: util.Now},
     _mt: {type: Date, default: util.Now},
     guid: {type:String, default: uuid},
-    name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"], unique: [true, "Название экспоната должно быть уникальным"]}, en: String},
+    name: {ru: {type: String, required: [true, "Отсутствует Название экспоната"], minlength: [1, "Слишком короткое Название экспоната"]}, en: String},
     title: {ru: String, en: String},
     subtitle: {ru: String, en: String},
     location: {ru: String, en: String},
@@ -29,6 +29,8 @@ var exhibitSchema = new mongoose.Schema({
         description:{ru: String, en: String},
         guid: {type: String, default: uuid}
     }],
+    complex: {type: String, default: ""},
+    ordinal: {type: Number, default: 0},
 });
 
 exhibitSchema.plugin(autoIncrementPlugin.plugin, 'Exhibit');
