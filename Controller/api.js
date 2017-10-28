@@ -1,4 +1,4 @@
-// const exhibitModel = require("../Model/exhibit.js");
+const AppModel = require("../Model/app.js");
 
 /**
  * Класс предоставляет сервис по доступу к определенному DataChannel'y по имени
@@ -11,6 +11,7 @@ class ApiController
         if(!parser)
             throw new Error("Invalid parser");
 
+        this.dc = model.toLowerCase();
         this.model = require(`../Model/${model}.js`);
         this.parser = require(`../Parser/${parser}.js`);
     }
@@ -28,8 +29,23 @@ class ApiController
             case "entity": return this.model.find({_id:ensid}).select(this.parser.SelectionFilter("entity")).lean().exec().then(this.parser.TransformationFunction("entity"));
             case "all": return this.model.find({}).select(this.parser.SelectionFilter("all")).lean().exec().then(this.parser.TransformationFunction("all"));
             case "ping": return Promise.resolve(JSON.stringify("ok")).then(this.parser.TransformationFunction("ping"));
-            default: return Promise.reject({error: true, payload: `Invalid subject ${subject}`});
+            case "register": return Promise.resolve(JSON.stringify("ok"));
+            default: return Promise.reject({error: {message: `Invalid subject ${subject}`}});
         }
+    }
+
+    RegApp(pAppId, subject, pMeta){
+        const appid = `${this.dc}.${pAppId}`;
+        const meta = subject==="register"
+            ? Object.assign({}, pMeta, {id: appid}, {type: this.dc})
+            : Object.assign({}, {id: appid}, {type: this.dc});//если register то тело переданного запроса содержит meta если любой другой запрос то ненадо обновлять данные
+        return Promise.resolve(
+            AppModel.update(
+                {id: appid},
+                meta,
+                {upsert: true, setDefaultsOnInsert: true}
+            ).exec()
+        );
     }
 }
 
@@ -49,7 +65,10 @@ function ApiControllerFabric(dc){
         const appid = req.params.appid;
         const subject = req.params.subject;
         const ensid = req.params.ensid;
-        api.Ask(appid, subject, ensid)
+
+        Promise.resolve()
+            .then( () => api.RegApp(appid, subject, req.body))
+            .then( () => api.Ask(appid, subject, ensid) )
             .then( result => res.status(200).send(result) )
             .catch( error => res.status(200).send(error) )
     };

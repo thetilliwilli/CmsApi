@@ -21,7 +21,7 @@ class GoloParser
         return function(responseJson){
             switch(subject)
             {
-                case "meta": return {entities: responseJson.map(i => self._Form(i))};
+                case "meta": return {entities: responseJson.map(i => ({id: i._id, mt: i._mt, title: i.title}))};
                 case "entity": return self._Form(responseJson[0]);
                 case "all": return {entities: responseJson.map(i => self._Form(i))};
                 case "ping": return responseJson;
