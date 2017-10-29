@@ -14,7 +14,7 @@ var instSchema = new mongoose.Schema({
     hardname: String,//Имя от устройства
     type: {type: String, required: true, enum:["tag", "tuple", "golo"]},
     description: String,//Описание для апликейшена
-    complex: String,
+    complex: {type: String, default:""},
 });
 
 // instSchema.plugin(autoIncrementPlugin.plugin, 'Inst');
