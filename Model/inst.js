@@ -8,7 +8,7 @@ const util = require("../Module/util.js");
 //SETUP--------------------------------------------------------------------------------------------
 
 //LOGIC--------------------------------------------------------------------------------------------
-var appSchema = new mongoose.Schema({
+var instSchema = new mongoose.Schema({
     uptime: {type: Date, default: util.Now},
     id: {type:String, required: true, unique: true},//IMEI или persistent UUID
     hardname: String,//Имя от устройства
@@ -17,6 +17,6 @@ var appSchema = new mongoose.Schema({
     complex: String,
 });
 
-// appSchema.plugin(autoIncrementPlugin.plugin, 'App');
+// instSchema.plugin(autoIncrementPlugin.plugin, 'Inst');
 
-module.exports = mongoose.model("App", appSchema);
+module.exports = mongoose.model("Inst", instSchema);

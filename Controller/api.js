@@ -1,4 +1,4 @@
-const AppModel = require("../Model/app.js");
+const InstModel = require("../Model/inst.js");
 
 /**
  * Класс предоставляет сервис по доступу к определенному DataChannel'y по имени
@@ -40,7 +40,7 @@ class ApiController
             ? Object.assign({}, pMeta, {id: appid}, {type: this.dc})
             : Object.assign({}, {id: appid}, {type: this.dc});//если register то тело переданного запроса содержит meta если любой другой запрос то ненадо обновлять данные
         return Promise.resolve(
-            AppModel.update(
+            InstModel.update(
                 {id: appid},
                 meta,
                 {upsert: true, setDefaultsOnInsert: true}
