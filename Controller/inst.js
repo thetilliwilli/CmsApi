@@ -44,7 +44,7 @@ class InstCtrl
         let self = this;
         Promise.resolve()
             .then(() => repoAdapter.DeleteGallery("Inst/"+pReq.params.id))
-            .then(() => instModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => instModel.findOneAndRemove({id: pReq.params.id}).exec())
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));
@@ -52,11 +52,11 @@ class InstCtrl
 
     Update(pReq, pRes){
         var dto = pReq.body;
-        dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
+        dto.uptime = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.StoreGallery("Inst/"+pReq.params.id, dto))
-            .then(() => instModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            // .then(() => repoAdapter.StoreGallery("Inst/"+pReq.params.id, dto))
+            .then(() => instModel.findOneAndUpdate({id: pReq.params.id}, dto).exec())
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));
