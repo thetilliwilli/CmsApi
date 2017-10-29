@@ -15,7 +15,7 @@ class GoloCtrl
 
     //REST METHODS-----------------------------
     All(pReq, pRes){
-        goloModel.find({}).select("id name").lean().exec().then((result)=>{
+        goloModel.find({}).select("id name complex").lean().exec().then((result)=>{
             pRes.status(200).json(result)
         });
     }
