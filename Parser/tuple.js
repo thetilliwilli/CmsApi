@@ -68,11 +68,11 @@ const COUNTRIES = [
 class TupleParser
 {
     constructor(){
-        this.SelectionFilter = this.SelectionFilter.bind(this);
-        this.TransformationFunction = this.TransformationFunction.bind(this);
+        this.Projection = this.Projection.bind(this);
+        this.Transformation = this.Transformation.bind(this);
     }
 
-    SelectionFilter(subject){
+    Projection(subject){
         switch(subject)
         {
             case "meta": return "_mt";
@@ -83,7 +83,7 @@ class TupleParser
         }
     }
 
-    TransformationFunction(subject){
+    Transformation(subject){
         let self = this;
         return function(responseJson){
             switch(subject)

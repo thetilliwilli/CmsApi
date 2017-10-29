@@ -22,13 +22,13 @@ class ApiController
      * @param {*} subject это тип задаваемого вопроса к серверу из списка: [ meta, entity, all, ping]
      * @param {*} ensid это уникальный номер сущности, например: a0dbf8a9-5980-4e01-8793-74690f7f4b93
      */
-    Ask(appid, subject, ensid){
+    Ask(appid, subject, ensid, filter){
         switch(subject)
         {
-            case "meta": return this.model.find({}).select(this.parser.SelectionFilter("meta")).lean().exec().then(this.parser.TransformationFunction("meta"));
-            case "entity": return this.model.find({_id:ensid}).select(this.parser.SelectionFilter("entity")).lean().exec().then(this.parser.TransformationFunction("entity"));
-            case "all": return this.model.find({}).select(this.parser.SelectionFilter("all")).lean().exec().then(this.parser.TransformationFunction("all"));
-            case "ping": return Promise.resolve(JSON.stringify("ok")).then(this.parser.TransformationFunction("ping"));
+            case "meta": return this.model.find(filter).select(this.parser.Projection("meta")).lean().exec().then(this.parser.Transformation("meta"));
+            case "entity": return this.model.find({_id:ensid}).select(this.parser.Projection("entity")).lean().exec().then(this.parser.Transformation("entity"));
+            case "all": return this.model.find(filter).select(this.parser.Projection("all")).lean().exec().then(this.parser.Transformation("all"));
+            case "ping": return Promise.resolve(JSON.stringify("ok")).then(this.parser.Transformation("ping"));
             case "register": return Promise.resolve(JSON.stringify("ok"));
             default: return Promise.reject({error: {message: `Invalid subject ${subject}`}});
         }
@@ -46,6 +46,10 @@ class ApiController
                 {upsert: true, setDefaultsOnInsert: true}
             ).exec()
         );
+    }
+
+    GenerateFilter(appid, subject){
+        return this.parser.Filter(appid, subject, this.dc, InstModel);
     }
 }
 
@@ -68,7 +72,7 @@ function ApiControllerFabric(dc){
 
         Promise.resolve()
             .then( () => api.RegApp(appid, subject, req.body))
-            .then( () => api.Ask(appid, subject, ensid) )
+            .then( () => api.GenerateFilter(appid, subject)).then( filter => api.Ask(appid, subject, ensid, filter) )//Должны идти друг за другом
             .then( result => res.status(200).send(result) )
             .catch( error => res.status(200).send(error) )
     };

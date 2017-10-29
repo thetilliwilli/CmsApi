@@ -1,7 +1,13 @@
 
 class ExhibitParser
 {
-    SelectionFilter(subject){
+    constructor(){
+        this.Projection = this.Projection.bind(this);
+        this.Transformation = this.Transformation.bind(this);
+        this.Filter = this.Filter.bind(this);
+    }
+
+    Projection(subject){
         switch(subject)
         {
             case "meta": return "_mt";
@@ -12,18 +18,37 @@ class ExhibitParser
         }
     }
 
-    TransformationFunction(subject){
+    Transformation(subject){
         let self = this;
         return function(responseJson){
             switch(subject)
             {
-                case "meta": return {entities: responseJson.map(i => ({id: i._id, mt: i._mt}))};
+                case "meta":
+                    const entities = responseJson.map(i => ({id: i._id, mt: i._mt}));
+                    const times = entities.map(i=>i.mt?i.mt:new Date(0));
+                    const maxTime = Math.max(...times);
+                    const timestamp = (new Date(maxTime)).toISOString();
+                    return {entities, timestamp};
                 case "entity":return self._Form(responseJson[0]);
                 case "all": return {entities: responseJson.map(i => self._Form(i))};
                 case "ping": return responseJson;
                 default: throw new Error(`Invalid subject ${subject}`);
             }
         };
+    }
+
+    Filter(appid, subject, dc, instModel){
+        if(dc==="exhibit" || dc==="golo")
+        {
+            switch(subject)
+            {
+                case "meta":
+                case "all":
+                    return instModel.findOne({id: `${dc}.${appid}`}).exec().then(r => ({complex: r.complex}));
+            }
+        }
+            
+        return Promise.resolve({});
     }
 
     _Form(ens){
