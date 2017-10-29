@@ -30,6 +30,20 @@ class GoloParser
         };
     }
 
+    Filter(appid, subject, dc, instModel){
+        if(dc==="exhibit" || dc==="golo")
+        {
+            switch(subject)
+            {
+                case "meta":
+                case "all":
+                    return instModel.findOne({id: `${dc}.${appid}`}).exec().then(r => ({complex: r.complex}));
+            }
+        }
+            
+        return Promise.resolve({});
+    }
+    
     _Form(ens){
         ens.id = ens._id;delete ens._id;
         ens.mt = ens._mt;delete ens._mt;
