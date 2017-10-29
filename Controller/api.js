@@ -1,5 +1,5 @@
 const InstModel = require("../Model/inst.js");
-
+const util = require("../Module/util.js");
 /**
  * Класс предоставляет сервис по доступу к определенному DataChannel'y по имени
  */
@@ -37,8 +37,8 @@ class ApiController
     RegApp(pAppId, subject, pMeta){
         const appid = `${this.dc}.${pAppId}`;
         const meta = subject==="register"
-            ? Object.assign({}, pMeta, {id: appid}, {type: this.dc})
-            : Object.assign({}, {id: appid}, {type: this.dc});//если register то тело переданного запроса содержит meta если любой другой запрос то ненадо обновлять данные
+            ? Object.assign({}, pMeta, {id: appid, type: this.dc, uptime: util.Now()})
+            : Object.assign({}, {id: appid, type: this.dc, uptime: util.Now()});//если register то тело переданного запроса содержит meta если любой другой запрос то ненадо обновлять данные
         return Promise.resolve(
             InstModel.update(
                 {id: appid},
