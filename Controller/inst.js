@@ -52,7 +52,6 @@ class InstCtrl
 
     Update(pReq, pRes){
         var dto = pReq.body;
-        dto.uptime = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
         Promise.resolve()
             // .then(() => repoAdapter.StoreGallery("Inst/"+pReq.params.id, dto))
