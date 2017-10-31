@@ -9,7 +9,7 @@ module.exports = function ExpressInit(){
         var app = express();
         
         // app.use(bodyParser.urlencoded({extended: true}));
-        app.use(bodyParser.json({limit:50*1000*1000}));
+        app.use(bodyParser.json({limit:100*1024*1024}));
         //CORS заголовок - принимать запросы с любых доменов
         app.use((req, res, next)=>{
             res.header("Access-Control-Allow-Origin", "*");
