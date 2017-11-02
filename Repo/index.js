@@ -100,6 +100,28 @@ class MediaRepository
         });
     }
 
+    CopyFile(gidFrom, gidTo, fid, fext){
+        const absFrom = this.SafeAbs(gidFrom, fid+"."+fext);
+        const absTo = this.SafeAbs(gidTo, fid+"."+fext);
+        return new Promise((rs,rj) => {
+            const streamFrom = fs.createReadStream(absFrom);
+            const streamTo = fs.createWriteStream(absTo);
+            function FinilizeAndReject(error){
+                streamFrom.unpipe(streamTo);
+                streamTo.end();
+                streamTo.destroy();
+                streamFrom.destroy();
+                rj(error);
+            }
+            streamTo.on("error", FinilizeAndReject);
+            streamFrom.on("error", FinilizeAndReject);
+            streamFrom.pipe(streamTo);//непосредственно момент копирования
+            streamTo.on("finish", ()=>{
+                rs();
+            });
+        });
+    }
+
     /**
      * Получить информацию по файлу
      * @param {string} gid 

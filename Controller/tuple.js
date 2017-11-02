@@ -85,6 +85,7 @@ class TupleCtrl
 
     _Error(error){
         error = error instanceof Error ? error.message : error;
+        console.error(error);
         return {error};
     }
 }

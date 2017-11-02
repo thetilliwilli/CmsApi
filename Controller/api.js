@@ -74,7 +74,10 @@ function ApiControllerFabric(dc){
             .then( () => api.RegApp(appid, subject, req.body))
             .then( () => api.GenerateFilter(appid, subject)).then( filter => api.Ask(appid, subject, ensid, filter) )//Должны идти друг за другом
             .then( result => res.status(200).send(result) )
-            .catch( error => res.status(200).send(error) )
+            .catch( error => {
+                console.log(error);
+                return res.status(200).send(error)
+            })
     };
 }
 
