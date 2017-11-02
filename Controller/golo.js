@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
 const repoAdapter = require("../Module/repoAdapter.js");
+const OverflowHandler = require("../Module/overflowHandler.js");
 
 class GoloCtrl
 {
@@ -35,6 +36,7 @@ class GoloCtrl
             .then(() => this._NextIndex())
             .then(index => repoAdapter.StoreGallery("Golo/"+index, dto))
             .then(() => goloModel.create(dto))
+            .then(() => OverflowHandler(dto))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}))
             .catch(error => pRes.status(200).send(self._Error(error)));
@@ -57,6 +59,7 @@ class GoloCtrl
         Promise.resolve()
             .then(() => repoAdapter.StoreGallery("Golo/"+pReq.params.id, dto))
             .then(() => goloModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));

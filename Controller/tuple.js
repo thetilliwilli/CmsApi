@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
 const repoAdapter = require("../Module/repoAdapter.js");
+const OverflowHandler = require("../Module/overflowHandler.js");
 
 class TupleCtrl
 {
@@ -35,6 +36,7 @@ class TupleCtrl
             .then(() => this._NextIndex())
             .then(index => repoAdapter.StoreGallery("Tuple/"+index, dto))
             .then(() => tupleModel.create(dto))
+            .then(() => OverflowHandler(dto))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}))
             .catch(error => pRes.status(200).send(self._Error(error)));
@@ -57,6 +59,7 @@ class TupleCtrl
         Promise.resolve()
             .then(() => repoAdapter.StoreGallery("Tuple/"+pReq.params.id, dto))
             .then(() => tupleModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));

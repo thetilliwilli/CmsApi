@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
 const repoAdapter = require("../Module/repoAdapter.js");
+const OverflowHandler = require("../Module/overflowHandler.js");
 
 class ExhibitCtrl
 {
@@ -35,6 +36,7 @@ class ExhibitCtrl
             .then(() => this._NextIndex())
             .then(index => repoAdapter.StoreGallery("Tag/"+index, dto))
             .then(() => exhibitModel.create(dto))
+            .then(() => OverflowHandler(dto))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}))
             .catch(error => pRes.status(200).send(self._Error(error)));
@@ -57,6 +59,7 @@ class ExhibitCtrl
         Promise.resolve()
             .then(() => repoAdapter.StoreGallery("Tag/"+pReq.params.id, dto))
             .then(() => exhibitModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));
