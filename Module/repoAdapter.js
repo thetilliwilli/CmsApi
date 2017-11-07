@@ -9,6 +9,8 @@ module.exports = {
      * Принять на вход base64 галлерею -> сохранить на диск -> вернуть галлерею с подмененной инфой по сохранненым файлам
      */
     StoreGallery: function(galleryId, dto){
+        if(!dto || !dto.imageGallery)
+            return Promise.resolve();//Например когда меняем complex, ordinal
         const gallery = dto.imageGallery;
         const gid = galleryId.toString();
         return Promise.resolve()

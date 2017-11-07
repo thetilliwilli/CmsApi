@@ -16,7 +16,7 @@ class ExhibitCtrl
 
     //REST METHODS-----------------------------
     All(pReq, pRes){
-        exhibitModel.find({}).select("id name complex").lean().exec().then((result)=>{
+        exhibitModel.find({}).select("id name complex ordinal").lean().exec().then((result)=>{
             pRes.status(200).json(result)
         });
     }
