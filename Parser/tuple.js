@@ -126,7 +126,7 @@ class TupleParser
             delete ens.fields;
         ens.images = ens.imageGallery.map(img => REPO_HOSTNAME + img.image);
             delete ens.imageGallery;
-        ens.cover = REPO_HOSTNAME + ens.coverImage;
+        ens.cover = ens.coverImage==="/Static/img/defaultTupleAvatar.jpg"?"":(REPO_HOSTNAME + ens.coverImage);
             delete ens.coverImage;
         return ens;
     }
