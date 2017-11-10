@@ -15,7 +15,7 @@ var tupleSchema = new mongoose.Schema({
     catsub: {type: String, required: [true, "Отсутствует Категория экспоната"]},
     countries: [String],
     description: String,
-    coverImage: String,
+    coverImage: {type:String, default:""},
     imageGallery: [{
         image: String,
         thumbnail: String,

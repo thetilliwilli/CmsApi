@@ -1,3 +1,7 @@
+//REQUIRE-------------------------
+const config = require("../config.js");
+//SETUP---------------------------
+const REPO_HOSTNAME = `http://${config.repo.host}:${config.repo.port}`;
 
 class ExhibitParser
 {
@@ -56,6 +60,12 @@ class ExhibitParser
         ens.mt = ens._mt;delete ens._mt;
         delete ens.guid;
         delete ens.__v;
+
+        ens.imageGallery = ens.imageGallery.map(img => ({
+            image: !img.image ? "" : REPO_HOSTNAME + img.image,//если нет изображения - то пустую строку
+            description: img.description,
+        }));
+        ens.coverImage = !ens.coverImage ? "" : REPO_HOSTNAME + ens.coverImage;//если нет изображения - то пустую строку
         return ens;
     }
 }

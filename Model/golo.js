@@ -28,7 +28,7 @@ var goloSchema = new mongoose.Schema({
         description:{ru: String, en: String},
         guid: {type: String, default: uuid}
     }],
-    video: {type: String, default: "/Static/vid/defaultGoloVid.mp4"},
+    video: {type: String, default: ""},
     complex: {type: String, default: ""},
     ordinal: {type: Number, default: 0},
 });

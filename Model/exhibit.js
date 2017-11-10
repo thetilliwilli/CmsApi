@@ -19,7 +19,7 @@ var exhibitSchema = new mongoose.Schema({
     description: {ru: String, en: String},
     history: {ru: String, en: String},
     date: {type: Date, default: util.Now},
-    coverImage: {type: String, default: "/Static/img/defaultExhibitAvatar.jpg"},
+    coverImage: {type: String, default: ""},
     fields: [{
         name: {ru: String, en: String},
         value: {ru: String, en: String}

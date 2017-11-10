@@ -23,6 +23,8 @@ module.exports = function HOC(dto){
     {
         if(dto.imageGallery.length === 0)
         {
+            if(!dto.coverImage && !dto.video)
+                return;
             const firstImageParts = dto.coverImage ? dto.coverImage.split("/") : dto.video.split("/");
             OverflowHandler(firstImageParts[3], firstImageParts[4], [""]);
         }

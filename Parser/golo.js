@@ -1,3 +1,7 @@
+//REQUIRE-------------------------
+const config = require("../config.js");
+//SETUP---------------------------
+const REPO_HOSTNAME = `http://${config.repo.host}:${config.repo.port}`;
 
 class GoloParser
 {
@@ -49,9 +53,12 @@ class GoloParser
         ens.mt = ens._mt;delete ens._mt;
         delete ens.guid;
         delete ens.__v;
-        ens.mediaGallery = ens.imageGallery;
+        ens.mediaGallery = ens.imageGallery.map(img => ({
+            image: !img.image ? "" : REPO_HOSTNAME + img.image,
+            description: img.description,
+        }));
             delete ens.imageGallery;
-            ens.mediaGallery.push({id:"video",video:ens.video});
+            !ens.video ? null : ens.mediaGallery.push({id:"video",video:REPO_HOSTNAME + ens.video});
             delete ens.video;
         return ens;
     }
