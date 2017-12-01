@@ -14,10 +14,17 @@ Promise.resolve()
     .then(() => expressInit())
     .then(cx => {
         //Do what you want here
-        var repo = require("./Repo/index.js");
-        // repo.CreateEmptyGallery("1234")
-        //     .then(() => repo.DeleteGallery("1234"))
-        //     .then(() => repo.CreateEmptyGallery("12345"))
-        // repo.SaveFile("12345", "image", "png", "base64 encode png content");
+        // var MBureau = require("./Model/bureau.js");
+        // var MDesigner = require("./Model/designer.js");
+
+        // MBureau.create({fullName:"KB - Kuntsevo"})
+        // .then(()=>{
+        //     return;// MDesigner.create({shortName:"Rihnana", fullName:"Rihnana B", bureau: 1})
+        // })
+        // .then(()=>{
+        //     return MDesigner.findOne({fullName:"Rihnana B"}).populate("bureau")
+        // })
+        // .then(designer=>console.log(designer))
+        // .catch(e=>console.log(e));
     })
     .catch(err=>console.error(err));
