@@ -149,27 +149,27 @@ module.exports = {
                     }
                 }
             })
-            .then(() => {//Пересохраняем coverImage
-                if(!dto.coverImage) return true;
-                if(dto.coverImage.slice(0,5) === "data:")
+            .then(() => {//Пересохраняем portrait
+                if(!dto.portrait) return true;
+                if(dto.portrait.slice(0,5) === "data:")
                 {
-                    const info = base64ToFile(dto.coverImage);
+                    const info = base64ToFile(dto.portrait);
                     return repo.SaveFile(gid, "cover", info.ext, info.content)
-                        .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
+                        .then(() => dto.portrait = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
                 }
                 else
                 {
-                    if(dto.coverImage.split("/")[4] === gid.split("/")[1])//если изображение принадлежит этой галлереи то ничего не делать
+                    if(dto.portrait.split("/")[4] === gid.split("/")[1])//если изображение принадлежит этой галлереи то ничего не делать
                     {
                         return Promise.resolve();
                     }
                     else
                     {
-                        const parts = dto.coverImage.split("/");
+                        const parts = dto.portrait.split("/");
                         const info = parts[5].split(".");
                         const gidFrom = `${parts[3]}/${parts[4]}`;
                         return repo.CopyFile(gidFrom, gid, info[0], info[1])
-                            .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info[1]}`);//подменить ссылку;
+                            .then(() => dto.portrait = `${config.repo.webRoot}/${gid}/cover.${info[1]}`);//подменить ссылку;
                     }
                 }
             })

@@ -34,7 +34,7 @@ class DesignerCtrl
         let self = this;
         Promise.resolve()
             .then(() => this._NextIndex())
-            .then(index => repoAdapter.StoreGallery_DesignerDesigner("Designer/"+index, dto))
+            .then(index => repoAdapter.StoreGallery_BureauDesigner("Designer/"+index, dto))
             .then(() => designerModel.create(dto))
             .then(() => OverflowHandler(dto))
             .then(() => self.LastUpdate())
@@ -57,7 +57,7 @@ class DesignerCtrl
         dto._mt = util.Now();//При любых изменения надо обновить modified timestamp
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.StoreGallery_DesignerDesigner("Designer/"+pReq.params.id, dto))
+            .then(() => repoAdapter.StoreGallery_BureauDesigner("Designer/"+pReq.params.id, dto))
             .then(() => designerModel.findByIdAndUpdate(pReq.params.id, dto).exec())
             .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
