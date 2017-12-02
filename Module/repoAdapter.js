@@ -94,5 +94,85 @@ module.exports = {
     },
     DeleteGallery: function(galleryId){
         repo.DeleteGallery(galleryId);
-    }
+    },
+    StoreGallery_BureauDesigner: function(galleryId, dto){
+        if(!dto)
+            return Promise.resolve();//Например когда меняем complex, ordinal
+        const gid = galleryId.toString();
+        return Promise.resolve()
+            .then(() => repo.CreateEmptyGallery(gid.toString()))
+            .then(() => {//Пересохраняем previewImage
+                if(!dto.previewImage) return true;
+                if(dto.previewImage.slice(0,5) === "data:")
+                {
+                    const info = base64ToFile(dto.previewImage);
+                    return repo.SaveFile(gid, "preview", info.ext, info.content)
+                        .then(() => dto.preview = `${config.repo.webRoot}/${gid}/preview.${info.ext}`);
+                }
+                else
+                {
+                    if(dto.previewImage.split("/")[4] === gid.split("/")[1])//если изображение принадлежит этой галлереи то ничего не делать
+                    {
+                        return Promise.resolve();
+                    }
+                    else
+                    {
+                        const parts = dto.previewImage.split("/");
+                        const info = parts[5].split(".");
+                        const gidFrom = `${parts[3]}/${parts[4]}`;
+                        return repo.CopyFile(gidFrom, gid, info[0], info[1])
+                            .then(() => dto.preview = `${config.repo.webRoot}/${gid}/preview.${info[1]}`);//подменить ссылку;
+                    }
+                }
+            })
+            .then(() => {//Пересохраняем logotypeImage
+                if(!dto.logotypeImage) return true;
+                if(dto.logotypeImage.slice(0,5) === "data:")
+                {
+                    const info = base64ToFile(dto.logotypeImage);
+                    return repo.SaveFile(gid, "logotype", info.ext, info.content)
+                        .then(() => dto.logotype = `${config.repo.webRoot}/${gid}/logotype.${info.ext}`);
+                }
+                else
+                {
+                    if(dto.logotypeImage.split("/")[4] === gid.split("/")[1])//если изображение принадлежит этой галлереи то ничего не делать
+                    {
+                        return Promise.resolve();
+                    }
+                    else
+                    {
+                        const parts = dto.logotypeImage.split("/");
+                        const info = parts[5].split(".");
+                        const gidFrom = `${parts[3]}/${parts[4]}`;
+                        return repo.CopyFile(gidFrom, gid, info[0], info[1])
+                            .then(() => dto.logotype = `${config.repo.webRoot}/${gid}/logotype.${info[1]}`);//подменить ссылку;
+                    }
+                }
+            })
+            .then(() => {//Пересохраняем coverImage
+                if(!dto.coverImage) return true;
+                if(dto.coverImage.slice(0,5) === "data:")
+                {
+                    const info = base64ToFile(dto.coverImage);
+                    return repo.SaveFile(gid, "cover", info.ext, info.content)
+                        .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info.ext}`);
+                }
+                else
+                {
+                    if(dto.coverImage.split("/")[4] === gid.split("/")[1])//если изображение принадлежит этой галлереи то ничего не делать
+                    {
+                        return Promise.resolve();
+                    }
+                    else
+                    {
+                        const parts = dto.coverImage.split("/");
+                        const info = parts[5].split(".");
+                        const gidFrom = `${parts[3]}/${parts[4]}`;
+                        return repo.CopyFile(gidFrom, gid, info[0], info[1])
+                            .then(() => dto.coverImage = `${config.repo.webRoot}/${gid}/cover.${info[1]}`);//подменить ссылку;
+                    }
+                }
+            })
+            .catch(error => {console.error(error); throw error;});
+    },
 };
