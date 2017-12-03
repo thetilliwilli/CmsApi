@@ -61,7 +61,7 @@ class DesignerCtrl
         let self = this;
         Promise.resolve()
             .then(() => repoAdapter.StoreGallery_BureauDesigner("Designer/"+pReq.params.id, dto))
-            .then(() => designerModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            .then(() => designerModel.findByIdAndUpdate(pReq.params.id, dto, {new:true}).exec())
             .then((designer) => self._UpdateBureauBinding(designer.bureau, "UpdateDesigner", designer._id))
             .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
