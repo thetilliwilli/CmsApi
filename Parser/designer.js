@@ -62,8 +62,7 @@ class DesignerParser
         delete ens.guid;
         delete ens.__v;
 
-        ens.preview = !ens.preview ? "" : REPO_HOSTNAME + ens.preview;//если нет изображения - то пустую строку
-        ens.logotype = !ens.logotype ? "" : REPO_HOSTNAME + ens.logotype;//если нет изображения - то пустую строку
+        ens.portrait = !ens.portrait ? "" : REPO_HOSTNAME + ens.portrait;//если нет изображения - то пустую строку
         return ens;
     }
 }

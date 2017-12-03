@@ -7,7 +7,7 @@ const util = require("../Module/util.js");
 
 var bureauSchema = new mongoose.Schema({
     //META--------------------
-    // _mt: {type: Date, default: util.Now},
+    _mt: {type: Date, default: util.Now},
 
     //PROPERTIES--------------------
     shortName: {type: String, default: ""}, //"АО «КБП»",
