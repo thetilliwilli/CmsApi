@@ -1,4 +1,5 @@
 const designerModel = require("../Model/designer.js");
+const bureauModel = require("../Model/bureau.js");
 const fs = require("fs");
 const path = require("path");
 const util = require("../Module/util.js");
@@ -16,7 +17,7 @@ class DesignerCtrl
 
     //REST METHODS-----------------------------
     All(pReq, pRes){
-        designerModel.find({}).select("id fullName").lean().exec().then((result)=>{
+        designerModel.find({}).select("id fullName bureau").lean().exec().then((result)=>{
             pRes.status(200).json(result)
         });
     }
@@ -36,6 +37,7 @@ class DesignerCtrl
             .then(() => this._NextIndex())
             .then(index => repoAdapter.StoreGallery_BureauDesigner("Designer/"+index, dto))
             .then(() => designerModel.create(dto))
+            .then((designer) => self._UpdateBureauBinding(designer.bureau, "AddDesigner", designer._id))
             .then(() => OverflowHandler(dto))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}))
@@ -47,6 +49,7 @@ class DesignerCtrl
         Promise.resolve()
             .then(() => repoAdapter.DeleteGallery("Designer/"+pReq.params.id))
             .then(() => designerModel.findByIdAndRemove(pReq.params.id).exec())
+            .then((designer) => self._UpdateBureauBinding(designer.bureau, "DeleteDesigner", designer._id))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));
@@ -59,6 +62,7 @@ class DesignerCtrl
         Promise.resolve()
             .then(() => repoAdapter.StoreGallery_BureauDesigner("Designer/"+pReq.params.id, dto))
             .then(() => designerModel.findByIdAndUpdate(pReq.params.id, dto).exec())
+            .then((designer) => self._UpdateBureauBinding(designer.bureau, "UpdateDesigner", designer._id))
             .then(() => OverflowHandler(dto))
             .then(()=>self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
@@ -90,6 +94,20 @@ class DesignerCtrl
         error = error instanceof Error ? error.message : error;
         console.error(error);
         return {error};
+    }
+
+    _UpdateBureauBinding(bureauId, action, designerId){
+        if(action==="UpdateDesigner") return Promise.resolve()
+            .then(() => bureauModel.find({}).exec())
+            .then(docs => {
+                var deleteJobs = docs.map(doc => Promise.resolve().then(() => doc.DeleteDesigner(designerId)));
+                return Promise.all(deleteJobs);
+            })
+            .then(() => bureauModel.findOne({_id: bureauId}).exec())
+            .then(doc => doc && doc["AddDesigner"](designerId)); //если (doc = null) то ничего не произойдет: для случая когда (bureau = -1)
+        else return Promise.resolve()
+            .then(() => bureauModel.findOne({_id: bureauId}).exec())
+            .then(doc => doc && doc[action](designerId) ); //если (doc = null) то ничего не произойдет: для случая когда (bureau = -1)
     }
 }
 

@@ -19,8 +19,22 @@ var bureauSchema = new mongoose.Schema({
     //Перед любым сохранением/изменением необходимо добавлять сюда <id of this[Designer._id]>
     //Сделать это через прехуки
     //Также удалять из другого КБ конструткторов у которых изменилось КБ
-    designers : [String],//id конструкторов
+    designers : [Number],//id конструкторов
 });
+
+bureauSchema.methods.AddDesigner = function(designerId){
+    if(this.designers.indexOf(designerId) !== -1) return;
+
+    this.designers.push(designerId);
+    return this.save();
+}
+bureauSchema.methods.DeleteDesigner = function(designerId){
+    var index = this.designers.indexOf(designerId);
+    if(index === -1)
+        return;
+    this.designers.splice(index,1);
+    return this.save();
+}
 
 bureauSchema.plugin(autoIncrementPlugin.plugin, "Bureau");
 

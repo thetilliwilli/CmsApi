@@ -26,7 +26,7 @@ var designerSchema = new mongoose.Schema({
     characteristics : {type: String, default: ""}, //"Высококлассный специалист - инструментальщик по изготовлению технологической оснастки, используемой в военном производстве.",
     portrait: {type: String, default: ""}, //"",//портрет конструктора
     // bureau: BureauSchema, //becareful subdoc
-    bureau: {type: Number, ref: "Bureau"}
+    bureau: {type: Number, ref: "Bureau", default: -1},
 });
 
 designerSchema.plugin(autoIncrementPlugin.plugin, "Designer");
