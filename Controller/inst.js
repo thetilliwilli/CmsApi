@@ -20,6 +20,15 @@ class InstCtrl
         });
     }
 
+    Status(pReq, pRes){
+        instModel.find({}).select("id type hardname description uptime").lean().exec().then((result)=>{
+            pRes.status(200).json({
+                statuses:result,
+                serverTime:util.Now()
+            });
+        });
+    }
+
     // One(pReq, pRes){
     //     instModel.findById(pReq.params.id, (err, result)=>{
     //         if(err) pRes.send(err);
