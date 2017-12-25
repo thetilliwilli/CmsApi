@@ -6,6 +6,7 @@ const tupleApi = API("tuple");
 const goloApi = API("golo");
 const bureauApi = API("bureau");
 const designerApi = API("designer");
+const playerApi = API("player");
 
 //subject - это тип задаваемого вопроса к серверу из списка: [ meta, entity, all, ping]
 router.route("/tag/:appid/:subject/:ensid*?")
@@ -17,6 +18,7 @@ router.route("/golo/:appid/:subject/:ensid*?")
     .post(goloApi);//там где нужна регистрация Устройств (этикетки)
 router.route("/bureau/:appid/:subject/:ensid*?").get(bureauApi);
 router.route("/designer/:appid/:subject/:ensid*?").get(designerApi);
+router.route("/player/:appid/:subject/:ensid*?").get(playerApi);
 
 
 module.exports = router;
