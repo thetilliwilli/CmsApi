@@ -54,13 +54,32 @@ class MediaRepository
      */
     DeleteGallery(gid){
         const abs = this.SafeAbs(gid);
-        return new Promise((RS,RJ) => {
-            fs.readdir(abs, (error, files) => {
-                if(error) return RJ(error);
-                files.forEach(f => fs.unlink(path.join(abs, f)));//Осторожно: только назначаю Job'ы на удаление файлов, но без всяких гарантий, т.е. в худшей ситуации файлы остануться на диске вместе с папкой
-                fs.rmdir(abs, err => err?RJ(err):RS());
+
+        var ReadDirResolver = (RESOLVE_READDIR, REJECT_READDIR)=>{
+            fs.readdir(abs, (error, files)=>error?REJECT_READDIR(error):RESOLVE_READDIR(files))
+        };
+
+        var FilesDeleteFunction = function(files){
+            const allJobs = files.map(f => new Promise((RESOLVE_FILES_DELETE, REJECT_FILES_DELETE)=>{
+                fs.unlink(path.join(abs, f), error=>error?REJECT_FILES_DELETE(error):RESOLVE_FILES_DELETE());
+            }));
+            return Promise.all(allJobs);
+        };
+
+        var RmdirResolver = (RESOLVE_RMDIR, REJECT_RMDIR)=>{
+            fs.rmdir(abs, err => err?REJECT_RMDIR(err):RESOLVE_RMDIR());
+        };
+
+        return Promise.resolve()
+            .then(() => new Promise(ReadDirResolver))
+            .then(FilesDeleteFunction)
+            .then(() => new Promise(RmdirResolver))
+            .catch(error => {
+                if(error.code === "ENOENT")//если нету такой папки то ничего не делать - это нормальная ситуация
+                    return true;
+                console.error(error);
+                throw error;
             });
-        });
     }
 
     /**

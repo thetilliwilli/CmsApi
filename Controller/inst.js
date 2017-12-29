@@ -52,7 +52,7 @@ class InstCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery("Inst/"+pReq.params.id))
+            // .then(() => repoAdapter.DeleteGallery("Inst/"+pReq.params.id))
             .then(() => instModel.findOneAndRemove({id: pReq.params.id}).exec())
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )

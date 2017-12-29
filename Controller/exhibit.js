@@ -45,8 +45,8 @@ class ExhibitCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery("Tag/"+pReq.params.id))
             .then(() => exhibitModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => repoAdapter.DeleteGallery("Tag/"+pReq.params.id))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));

@@ -45,8 +45,8 @@ class BureauCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery("Bureau/"+pReq.params.id))
             .then(() => bureauModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => repoAdapter.DeleteGallery("Bureau/"+pReq.params.id))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));

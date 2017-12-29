@@ -47,8 +47,8 @@ class DesignerCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery("Designer/"+pReq.params.id))
             .then(() => designerModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => repoAdapter.DeleteGallery("Designer/"+pReq.params.id))
             .then((designer) => self._UpdateBureauBinding(designer.bureau, "DeleteDesigner", designer._id))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )

@@ -45,8 +45,8 @@ class GoloCtrl
     Delete(pReq, pRes){
         let self = this;
         Promise.resolve()
-            .then(() => repoAdapter.DeleteGallery("Golo/"+pReq.params.id))
             .then(() => goloModel.findByIdAndRemove(pReq.params.id).exec())
+            .then(() => repoAdapter.DeleteGallery("Golo/"+pReq.params.id))
             .then(() => self.LastUpdate())
             .then(() => pRes.status(200).send({message:"ok"}) )
             .catch(error => pRes.status(200).send(self._Error(error)));
