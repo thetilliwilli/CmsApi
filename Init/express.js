@@ -13,8 +13,12 @@ module.exports = function ExpressInit(){
         //CORS заголовок - принимать запросы с любых доменов
         app.use((req, res, next)=>{
             res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            // res.header("Access-Control-Allow-Credentials", "true");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Blob");
+            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            //HACK: для того что бы пропускать любые OPTIONS запросы (мой кастомный хедер Blob)
+            if(req.method === "OPTIONS")
+                return res.send(200);
             next();
         });
         app.use("/Static/Repo", express.static(config.repo.root));
