@@ -18,7 +18,7 @@ module.exports = function ExpressInit(){
             res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             //HACK: для того что бы пропускать любые OPTIONS запросы (мой кастомный хедер Blob)
             if(req.method === "OPTIONS")
-                return res.send(200);
+                return res.status(200).end();
             next();
         });
         app.use("/Static/Repo", express.static(config.repo.root));
