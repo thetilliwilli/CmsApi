@@ -5,7 +5,7 @@ const UserModel = require("../Model/user.js");
 const userStorage = []; 
 
 function InitializeUserCollection(){
-    UserModel.find({}).select("login password name").exec()
+    UserModel.find({}).select("login password name readOnly").exec()
         .then(users => {
             if(users.length === 0)
                 throw new Error("Database doesn't have any users. Add some users to database");
@@ -15,7 +15,7 @@ function InitializeUserCollection(){
 }
 
 function UpdateUserCollection(){
-    UserModel.find({}).select("login password name").exec()
+    UserModel.find({}).select("login password name readOnly").exec()
         .then(users => users.forEach(user => {
             const curUser = userStorage.find(u => u.login === user.login);
             if(curUser)

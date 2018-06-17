@@ -11,28 +11,39 @@ class Auth
     }
 
     IsAuth(req){
-        var isAuth = false;
         
         if(req.headers["blob"])
         {
             const {login, password} = jwt.Decode(req.headers["blob"]);
-        
-            if(login && password)
+            if (login && password)
             {
+
                 var userInfo = userInfoService.GetUserInfo(login);
-                if((userInfo.login === login) && (userInfo.password === password))
-                    isAuth = true;
+
+                //проверить что пользователь существует
+                if ((userInfo.login !== login) || (userInfo.password !== password))
+                    return this._Result(false, "Вы не авторизированы");
+
+                //проверить доступ на изменение данных
+                var isWriteAccessRequested = req.method.toUpperCase() !== "GET";
+                if (isWriteAccessRequested && userInfo.readOnly)
+                    return this._Result(false, "Вы обладаете правами только на просмотр данных");
             }
+            
+            return this._Result(true);
         }
 
-        return isAuth;
+        return this._Result(false, "Вы не авторизированы");
     }
 
     AuthFirewall(req, res, next){
-        if(this.IsAuth(req))
+
+        var authResult = this.IsAuth(req);
+
+        if(authResult.success)
             next();
         else
-            return res.send({error:"Вы не авторизированны"});
+            return res.send({error:authResult.error});
     }
 
     TryLogin(res, user){
@@ -51,6 +62,10 @@ class Auth
     TryLogout(res){
         res.clearCookie("blob");
         return true;
+    }
+
+    _Result(success, error){
+        return { success, error};
     }
 }
 
