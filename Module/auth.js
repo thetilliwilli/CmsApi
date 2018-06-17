@@ -11,39 +11,54 @@ class Auth
     }
 
     IsAuth(req){
+
+        var self = this;
+        var blob = req.headers["blob"];
+
+        if(!blob)
+            return this._Result(false, "Вы не авторизированы");
+
         
-        if(req.headers["blob"])
-        {
-            const {login, password} = jwt.Decode(req.headers["blob"]);
-            if (login && password)
-            {
 
-                var userInfo = userInfoService.GetUserInfo(login);
+        return Promise.resolve()
+            .then(() => jwt.Decode(blob))
+            .catch(error => self._Result(false, error))
+            .then((ctx) => {
 
-                //проверить что пользователь существует
-                if ((userInfo.login !== login) || (userInfo.password !== password))
-                    return this._Result(false, "Вы не авторизированы");
+                if(ctx.success !== undefined && !ctx.success)
+                    return self._Result(false, ctx.error);
 
-                //проверить доступ на изменение данных
-                var isWriteAccessRequested = req.method.toUpperCase() !== "GET";
-                if (isWriteAccessRequested && userInfo.readOnly)
-                    return this._Result(false, "Вы обладаете правами только на просмотр данных");
-            }
-            
-            return this._Result(true);
-        }
+                var {login, password} = ctx;
 
-        return this._Result(false, "Вы не авторизированы");
+                if (login && password)
+                {
+                    var userInfo = userInfoService.GetUserInfo(login);
+
+                    //проверить что пользователь существует
+                    if ((userInfo.login !== login) || (userInfo.password !== password))
+                        return self._Result(false, "Вы не авторизированы");
+
+                    //проверить доступ на изменение данных
+                    var isWriteAccessRequested = req.method.toUpperCase() !== "GET";
+                    if (isWriteAccessRequested && userInfo.readOnly)
+                        return self._Result(false, "Вы обладаете правами только на просмотр данных");
+
+                    //должно быть последним
+                    return self._Result(true);
+                }
+                else
+                    return self._Result(false, "Вы не авторизированы");
+            });
+        
     }
 
     AuthFirewall(req, res, next){
-
-        var authResult = this.IsAuth(req);
-
-        if(authResult.success)
-            next();
-        else
-            return res.send({error:authResult.error});
+        this.IsAuth(req)
+            .then(result => {
+                if(result.success) return next();
+                else return res.send({error:result.error});
+            })
+            .catch(error => res.send({error:error}));
     }
 
     TryLogin(res, user){
@@ -65,7 +80,7 @@ class Auth
     }
 
     _Result(success, error){
-        return { success, error};
+        return Promise.resolve({ success, error});
     }
 }
 

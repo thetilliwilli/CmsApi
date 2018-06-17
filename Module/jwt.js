@@ -10,7 +10,12 @@ class JWT
     }
 
     Decode(token){
-        return jwt.decode(token);
+        return new Promise((RS,RJ)=>{
+            jwt.verify(token, secret, (error, decoded)=>{
+                if(error) RJ(error);
+                else RS(decoded);
+            });
+        });
     }
 
 }
